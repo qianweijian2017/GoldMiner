@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"> 
+		<title>圣诞游戏 </title>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<link href="./PhoneReset.css" rel="stylesheet">  
+    	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script> 
+
+    	<script type="text/javascript" src="./zepto.min.js"></script>
+    	<script type="text/javascript" src="./fx.js"></script>
+    	<script type="text/javascript" src="./fx_methods.js"></script>
+
+	 <style type="text/css">
+		 
+			/*//弹出层*/
+		.new_cover_box{
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    text-align: center;
+		    background-color: rgba(0,0,0,.6);
+		    z-index: 100; 
+		    display: none;
+		}
+		.new_cover_box  .waiting_box{
+		    text-align: center;
+		    width: 80%;
+		    max-height: 10rem;
+		    padding-top: 30px;
+		    margin: 0 auto;
+		    margin-top: -5.5rem;
+		    margin-left: -40%;
+		    top: 50%;
+		    background-color: #fff;
+		    border-radius: 5px;
+		    position: fixed;
+		    padding: .6rem 0 0;
+		    box-sizing: border-box;
+		    left: 50%;
+		    z-index: 10; 
+		} 
+		.new_cover_box .waiting_box h3{
+		    color: #f33;
+		    font-size: .32rem;
+		    height: .8rem;
+		    line-height: .8rem;
+		    position: absolute;
+		    left: 0;
+		    top: 0;
+		    width: 100%;
+		    background: #EAEAEA;
+		}
+		.new_cover_box  .waiting_box p{ 
+		    color: #333;
+		    font-weight: 600;
+		    line-height: .45rem;
+		    font-size: .26rem;
+		    text-align: left;
+		}
+		.new_cover_box  .waiting_box p span{
+		    color: #f33;
+		    font-size: .26rem;
+		}
+		.new_cover_box  .waiting_box .content{ 
+		    padding: .6rem .2rem 0; 
+		    overflow: scroll;
+		    height: 8.5rem;
+		
+		}
+		.new_cover_box  .waiting_box .content h4{
+		    height: .7rem;
+		    line-height: .7rem;
+		    text-align: center;
+		    font-size: .3rem;
+		}
+		.new_cover_box  .waiting_box .content p{
+		    line-height: .5rem;
+		    font-size: .26rem;
+		    text-indent: 2em;
+		}
+		.new_cover_box  .waiting_box .content em{
+		    height: .8rem;
+		    line-height: .8rem;
+		}
+		.new_cover_box .btn_group{
+		    display: -webkit-flex;
+		    display: -moz-flex;
+		    display: -ms-flex;
+		    display: -o-flex;
+		    display: flex;  
+		    width: 100%;  
+		}
+		.new_cover_box .btn_group button{
+		    -webkit-flex: 1;
+		    -moz-flex: 1;
+		    -ms-flex: 1;
+		    -o-flex: 1;
+		    flex: 1;
+		    height: .8rem;
+		    background: #f66;
+		    font-size: .34rem;
+		    border-top: 1px solid #dedede;
+		    color: #fff;
+		} 
+		 </style>
+	<style>
+
+ 		#bodyBox{background-image: url(./imgs/shengdanbg.png);}
+ 		.shengdanlaoren{
+ 			height: 2.1rem;width: 100%;
+ 			position: fixed;
+ 			bottom: 6.6rem;
+ 			left: 0;
+ 		}
+ 		.moveBox{
+ 			 
+ 			width: 2rem;
+		    height: 2.1rem; 
+		    position: absolute;  
+		 
+
+ 		}
+ 		.MoveToLeft{
+ 			left: 0;
+ 		}
+ 		.MoveToRight{
+ 			right: 1rem;
+ 		}
+ 		.moveBox .laoren{
+ 			width: 100%;
+ 			height: 100%;
+ 			z-index: 9;
+ 		}
+ 		.shengzi {
+			    width: .1rem;
+		    height: .5rem; 
+		    /*最小高度1rem 最大3.4*/
+		    background-color: #b90101;
+		    position: absolute;
+		    right: 0;
+		    z-index: 99;
+		    top: 1.4rem;
+ 		}
+ 		.shengzi .gouzi{
+ 			width: 1rem;
+ 			height: 1rem;
+ 			position: absolute;
+ 			bottom: -1rem;
+ 			left: -.45rem;
+ 		}
+ 		.shengdanlaoren .line{
+ 			position:absolute;
+ 			width: 100%;
+ 			bottom: -.2rem;
+ 			height: .3rem;
+ 			z-index: 8;
+ 		}
+ 		#redBtn{
+ 			width: 1.5rem;
+ 			height: 1.5rem;
+ 			border-radius: 50%;
+ 			left: 50%;
+ 			margin-left: -.75rem;
+ 			position: fixed;
+ 			bottom: .3rem;
+
+ 		}
+ 		#Time{
+ 			width: 2rem;
+ 			height: .8rem; 
+ 			left: 10%; 
+ 			position: fixed;
+ 			bottom: .6rem;
+ 			border-radius: .1rem;
+ 			border:.03rem solid #f00;
+ 			color: #fff;
+			text-align: center;
+			line-height: .8rem;
+ 			font-size: .3rem;
+ 			letter-spacing: .03rem;
+
+ 		}
+ 		#score{
+ 			width: 2rem;
+ 			height: .8rem; 
+ 			line-height: .8rem;
+ 			right: 10%; 
+ 			position: fixed;
+ 			bottom: .6rem;
+ 			border-radius: .1rem;
+ 			border:.03rem solid #f00;
+ 			color: #fff;
+ 			text-align: center;
+ 			font-size: .3rem;
+
+ 		}
+ 		.lipin{
+ 			position: absolute;
+		    bottom: -1.5rem;
+		    width: .8rem;
+		    margin-left: -.4rem;
+ 		} 
+ 		#gameRule{ 
+ 			width: 2rem;
+ 			height: .7rem;
+ 			line-height: .7rem;
+ 			right: .3rem;
+ 			top: .2rem;
+ 			color: #fff;
+ 		}
+ 		#huodong{
+ 			width: 2rem;
+ 			height: .7rem;
+ 			line-height: .7rem;
+ 			right: .3rem;
+ 			top: 1rem;
+ 			color: #fff;
+ 		}
+ 	</style>
+	</head>
+	<body>    
+		  
+		
+ 	 <div id="gameRule" class="fixed rgba fz30 center index999">游戏规则</div>
+ 	 <div id="huodong" class="fixed rgba fz30 center index999">活动专区</div>
+ 	<div class="new_cover_box" style='z-index: 2222;'>
+ 	        <div class="waiting_box">  
+ 	            <h3>游戏规则</h3>
+ 	            <div class="content">
+ 	                <h4>活动游戏的现金红包金额设定</h4>
+ 	                 <p>游戏可分12种类型分数及相对应现金红包金额：100分--0.01元、200分--0.02元、400分--0.04元、600分--0.06元、800分--0.08元、1000分--0.10元、1200分--0.12元、1400分--0.14元、1600分--0.16元、1800分--0.18元、2000分--0.20元、8000分--0.80元最高积分20000分即换取2元的现金红包</p>
+
+					<h4>一.活动玩法简介：</h4>
+ 	                 <p>抓娃娃是一款既简单上手又充满乐趣并能够迅速能吸引顾客眼光的游戏。游戏时抓钩会左右持续来回移动，当移动到所喜好的娃娃或其他物品上，按住键，抓钩会自动帮你抓取娃娃。 每只娃娃有相对应的分数，只要能在规定时间内迅速抓到娃娃即可获得相应的分数，累积的分数可换取相对应的现金优惠券， 现金优惠券仅限于活动期间（12.21 18：00 -12.25 23:59）指定的商品使用，过期则失效</p>
+
+ 	                 <h4>二.活动参与分式及详细介绍</h4>
+ 	                 <p>1.活动期间（12.21 18：00 -12.25 23:59）凡关注“XXXX”微信公众号的新老用户每天均有一次游戏机会，该游戏机会仅在活动期间有效。</p>
+					<p>2.一局游戏机会最多可在活动游戏界面使用一次，使用后离开游戏界面则本局游戏机会会被消耗。</p>
+					<p>3.本次游戏获得的分数可直接换取相对应的现金优惠券，现金优惠券仅限指定商品使用，活动期间有效（12.21 18：00 -12.25 23:59）。</p>
+					<p>4.用户需在券面指定的有效期内使用，过期则失效，优惠券可在指定的商品下单时直接抵扣。
+</p>
+					<p>5.用户若参与活动的订单产生取消或退款等情形，则视为自动放弃此次游戏机会，本平台有权利收回用户此次的现金红包，不再参与当次游戏，退款金额以实际付款金额退回。</p>
+					<p>6.本次游戏最高总分数20000，最高总金额2元，每次下单最多使用一个红包，以获得的最高金额红包直接抵扣。</p>
+					<p>
+					    7.游戏已经开始后，用户离开游戏页面，视为用户选择离开游戏，自动放弃本局的游戏机会，
+					</p>
+
+ 
+ 	        	</div>
+ 	            <div class="btn_group"> 
+ 	                <button class="clear" >清楚了</button> 
+ 	            </div>
+ 	        </div>
+ 	    </div>   
+
+
+
+  	<div id='bodyBox' class='body-cover relative'>
+ 			
+	<section class="shengdanlaoren">
+
+		<img src="./imgs/line_02.png" alt=""  class="line">
+		<div class="moveBox" > 
+		   <img src="./imgs/shengdanlaoren_03.png" alt="" class="laoren">
+		   <div class="shengzi">
+				 <img src="./imgs/gouzi_05.png" alt="" class="gouzi">
+				 <img src="" class="lipin" alt="" id="lipin" style="display: none;">
+		   </div>		
+		</div> 
+	</section>
+	  <section class="liwu" style="position: absolute;width:100%;height: 2rem;left: 0;bottom: 2.5rem">
+	  	 <img src="./imgs/liwu_02.png" style="width: 100%;height: 100%;" alt="">
+	  </section>
+ 	</div>
+		<div id="Time">  </div>
+
+		<div id="redBtn"></div>
+
+ 		<div id="score"> </div>
+ 	 <section id="audio" style="display: none;">
+        <audio src="./media/shengdanlaoren.mp3" autobuffer loop="true" id="dadishumusic" autoplay="" preload=""  ></audio>
+        <audio src="./media/dianji.mp3" id="dianjiMusic" autobuffer   controls></audio>
+        <!-- <audio src="themes/haohaios/media/dt/dishubeidale.wav" autobuffer id="dadishumusic"  ></audio> --> 
+    </section>
+	</body>
+	<script type="text/javascript">
+		$('#bodyBox').width($(window).width())
+		$('#bodyBox').height($(window).height());
+		 
+
+	 var GoldMiner = function () {
+	 	 this.left 			= 0; 
+		 this.second 		= 1;      //不管
+		 this.speed 		= 0.01;  //速度 
+		 this.moveRightInterval = null;   //右定时器
+		 this.moveLeftInterval = null;   //左定时器
+		 this.timeInterval    = null;
+		 this.check        = true;       //允许老人移动 
+		 this.btnClick     = true;		 //允许点击 
+		 this.lipin        = {};
+		 this.score        = 0;			//初始分数
+		 this.scoreTotal   = 20000;  //总分
+		 this.timeTotal         = 60;	//时间 
+		 this.lipinScore =[{
+				 	 'score'  : '300',
+				 	 'no'  : '1' 
+				 },{
+				 	'score'  : '500',
+		 	 		'no'  : '2' 
+				 },{
+				 	'score'  : '700',
+		 	 		'no'  : '3' 
+				 },{
+				 	'score'  : '900',
+		 	 		'no'  : '4' 
+				 },{
+				 	'score'  : '1000',
+		 	 		'no'  : '5' 
+				 },{
+				 	'score'  : '1100',
+		 	 		'no'  : '6' 
+				 }]
+
+	 } 
+	 GoldMiner.prototype.init = function () {
+	 	    $('#Time').text(this.timeTotal +'s');
+	 	    $('#score').text(this.score +'/'+this.scoreTotal);
+
+	 		this.bindClickStart();
+	 		
+	 };
+
+	 GoldMiner.prototype.fnRight = function () {
+	 	var _this = this;
+	 	
+	 	this.moveRightInterval = setInterval(function () {
+	 		if(_this.check){ 
+				 _this.left +=  _this.speed;
+				 if(_this.left >= 4.8){
+				 	clearInterval(_this.moveRightInterval);
+
+				 	_this.fnLeft();
+				 }
+				 
+				 $('.moveBox').css('left',_this.left+'rem');
+				 
+			
+			 }
+
+			},_this.speed); 
+
+	 };
+ 	
+	 GoldMiner.prototype.fnLeft = function () {
+
+	 	var _this = this;
+	 	this.moveLeftInterval = setInterval(function () {
+	 		 if(_this.check){  
+				 _this.left -=  _this.speed;
+				 if(_this.left < 0.1){
+				 	 clearInterval(_this.moveLeftInterval);
+				 	 _this.fnRight();
+				 }
+				 
+				 $('.moveBox').css('left',_this.left+'rem');
+				  
+
+ 			}
+
+		},_this.speed);
+	 };
+	 GoldMiner.prototype.bindClickStart =function () {
+	 		var _this = this;
+	 		$('#redBtn').one('click',function () { 
+	 			 _this.fnRight();
+	 			 _this.bindClickCatch(); 
+	 			 _this.Time();
+	 		})
+
+	 }
+	 GoldMiner.prototype.Time = function () {
+	 	var _this = this;
+	 	var time = 0 ;
+	 	this.timeInterval = setInterval(function () {
+	 		time+=1;
+	 		//如果时间到或分数超过了总分
+	 		if(time > _this.timeTotal ){ 
+	 			_this.stopGame();
+	 			return; 
+	 		} 
+	 		var shengyu = _this.timeTotal - time;
+	 		$('#Time').text(shengyu+'s');
+
+	 	},1000);
+
+	 };
+	 GoldMiner.prototype.stopGame =function () {
+
+	 			clearInterval(this.timeInterval);
+	 			clearInterval(this.moveLeftInterval);
+	 			clearInterval(this.moveRightInterval);  
+	 			this.btnClick = false;
+			 	this.check = false;  
+	 			setTimeout(function () {  
+	 	 			 alert('游戏结束');
+
+	 	 		},500) 
+	 }
+	 GoldMiner.prototype.jisuanfen = function () {
+	 	 if(this.score >= this.scoreTotal){
+	 	 		$('#score').text(this.scoreTotal+'/'+this.scoreTotal);
+	 	 		this.stopGame(); 
+	 	 		return;
+
+	 	 }
+	 	 $('#score').text(this.score+'/'+this.scoreTotal);
+
+	 };
+	 GoldMiner.prototype.pushScore = function () {
+	 	var random = this.getRandom(0,6);
+
+	 	var lipin = this.lipinScore[random]; 
+	 	 
+	 	this.lipin = lipin;
+	 	this.score += Number(lipin.score); 
+	 	
+
+
+	 };
+	
+	 GoldMiner.prototype.getRandom = function (A,B) {
+
+	 	return Math.floor((A + Math.random()*B));
+	 		
+	 };
+	 GoldMiner.prototype.playMusic = function () {
+          $('#dianjiMusic')[0].play(); 
+	 	
+	 }
+	  GoldMiner.prototype.bindClickCatch = function () {
+
+	 	var _this = this;
+	 	$('#redBtn').on('click',function () {
+
+	 		if(_this.btnClick){ 
+
+	 				_this.btnClick = false;
+			 		_this.check = false; 
+			 		 
+
+
+			 		$('.shengzi').animate({
+			 			  'height' : '3.2rem'
+			 		}, 1000,function () {
+
+	 					_this.pushScore();
+
+			 			$('#lipin').attr('src','./imgs/lipin'+_this.lipin.no+'.png'); 			 
+			 			$('#lipin').show();
+			 			$('.shengzi').animate({'height' : '.5rem'}, 1000,function () {
+			 				_this.check = true; 
+	 						_this.btnClick = true;
+	 						$('#lipin').hide(); 
+	 						_this.jisuanfen();
+	 						_this.playMusic();
+
+			 				
+			 			});
+
+			 		})
+
+
+	 		}
+
+	 	})
+	 };
+
+
+
+
+	var huangjin  = new GoldMiner();
+
+	huangjin.init();
+
+
+	</script>
+	<script type="text/javascript">
+	   		function Back() {
+	   		 	 try{
+	   		 	 	 history.back();
+	   		 	 }catch(e){
+	   		 	 	  
+	   		 	 	api.closeWin();
+	   		 	 	 
+	   		 	 	    
+	   		 	 }
+	   		 } 
+		</script> 
+	 <script type="text/javascript">
+	         window.onload = function () {
+
+                
+
+            	var audio = document.getElementById('dadishumusic');
+                audio.play(); 
+                wx.config({
+                        debug : false, // 这里为false
+                        appId : 'wxf8b4f85f3a794e77', // 以下随意填写即可
+                        timestamp : (new Date()).getTime(),
+                        nonceStr : '',
+                        signature : '',
+                        jsApiList : ['checkJsApi'] 
+                   });
+ 
+                wx.ready(function() { 
+                     audio.play();
+               });
+            
+        } 
+
+	         var findElem = function (elem) {
+	             return document.querySelectorAll(elem);
+	         }
+	         var hideElem = function (elem) {
+	             elem.style.display = 'none'
+	         }
+	         var showElem = function (elem) {
+	             elem.style.display = 'block'
+	         }
+	 
+	         findElem('.btn_group')[0].onclick = function () {
+	             hideElem( findElem('.new_cover_box')[0] );
+	         }
+	 
+	         findElem('#gameRule')[0].onclick = function () {
+	             showElem( findElem('.new_cover_box')[0] );
+	                 
+	         }  
+	 </script>
+	 <script type="text/javascript">
+	(function (doc, win) {
+	        var docEl = doc.documentElement,
+	            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+	            recalc = function () {
+	                var clientWidth = docEl.clientWidth;
+	                if (!clientWidth) return;
+	                if(clientWidth>=750){
+	                    docEl.style.fontSize = '100px';
+	                }else{
+	                    docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+	                }
+	            };
+	
+	        if (!doc.addEventListener) return;
+	        win.addEventListener(resizeEvt, recalc, false);
+	        doc.addEventListener('DOMContentLoaded', recalc, false);
+	    })(document, window);
+	</script> 
+</html>
